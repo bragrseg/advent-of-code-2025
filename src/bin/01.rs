@@ -5,7 +5,7 @@ use code_timing_macros::time_snippet;
 use const_format::concatcp;
 use adv_code_2025::*;
 
-const DAY: &str = "01"; // TODO: Fill the day
+const DAY: &str = "01";
 const INPUT_FILE: &str = concatcp!("input/", DAY, ".txt");
 
 const TEST: &str = "\
@@ -19,7 +19,7 @@ L1
 L99
 R14
 L82
-"; // TODO: Add the test input
+";
 
 fn main() -> Result<()> {
     start_day(DAY);
@@ -28,7 +28,7 @@ fn main() -> Result<()> {
     println!("=== Part 1 ===");
 
     fn part1<R: BufRead>(reader: R) -> Result<usize> {
-        // TODO: Solve Part 1 of the puzzle
+
         let mut position:i32 = 50;
         let mut count = 0;
         for line in reader.lines() {
@@ -50,7 +50,7 @@ fn main() -> Result<()> {
         Ok(answer)
     }
 
-    // TODO: Set the expected answer for the test input
+
     assert_eq!(3, part1(BufReader::new(TEST.as_bytes()))?);
 
     let input_file = BufReader::new(File::open(INPUT_FILE)?);

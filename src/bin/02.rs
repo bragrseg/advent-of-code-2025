@@ -6,14 +6,14 @@ use const_format::concatcp;
 use itertools::Itertools;
 use adv_code_2025::*;
 
-const DAY: &str = "02"; // TODO: Fill the day
+const DAY: &str = "02";
 const INPUT_FILE: &str = concatcp!("input/", DAY, ".txt");
 
 const TEST: &str = "\
 11-22,95-115,998-1012,1188511880-1188511890,222220-222224,
 1698522-1698528,446443-446449,38593856-38593862,565653-565659,
 824824821-824824827,2121212118-2121212124
-"; // TODO: Add the test input
+"; 
 
 fn main() -> Result<()> {
     start_day(DAY);
@@ -22,7 +22,6 @@ fn main() -> Result<()> {
     println!("=== Part 1 ===");
 
     fn part1<R: BufRead>(reader: R) -> Result<usize> {
-        // TODO: Solve Part 1 of the puzzle
         let mut answer = 0;
         let lines = reader.lines();
         let mut input:String = "".to_string();
@@ -47,8 +46,7 @@ fn main() -> Result<()> {
 
         Ok(answer)
     }
-
-    // TODO: Set the expected answer for the test input
+    
     assert_eq!(1227775554, part1(BufReader::new(TEST.as_bytes()))?);
 
     let input_file = BufReader::new(File::open(INPUT_FILE)?);
