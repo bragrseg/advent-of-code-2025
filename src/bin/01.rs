@@ -21,6 +21,10 @@ R14
 L82
 ";
 
+const INITIAL_POSITION:i32 = 50;
+const ROTOR_SIZE:i32 = 100;
+const ROTOR_CLICK_POSITION:i32 = 0;
+
 fn main() -> Result<()> {
     start_day(DAY);
 
@@ -29,19 +33,23 @@ fn main() -> Result<()> {
 
     fn part1<R: BufRead>(reader: R) -> Result<usize> {
 
-        let mut position:i32 = 50;
+        let mut position:i32 = INITIAL_POSITION;
         let mut count = 0;
+        //read through each line in the input
         for line in reader.lines() {
             let line = line?;
+            //check if the rotation is to the left
             if(line.starts_with("L")){
                 let amount:i32 = line.split("L").nth(1).unwrap().parse()?;
-                position = (position - amount)%100;
+                position = (position - amount)%ROTOR_SIZE;
             }
+            //check if the rotation is to the right
             else if line.starts_with("R") {
                 let amount:i32 = line.split("R").nth(1).unwrap().parse()?;
-                position = (position+amount)%100;
+                position = (position+amount)%ROTOR_SIZE;
             }
-            if(position==0)
+            //determine if the rotor is in the 0 position
+            if(position==ROTOR_CLICK_POSITION)
             {
                 count += 1;
             }
@@ -61,37 +69,46 @@ fn main() -> Result<()> {
     //region Part 2
     println!("\n=== Part 2 ===");
 
+    //take an amount and extract the number of full rotations in it
+    fn div_amount(amount: &mut i32) ->usize{
+        let div = *amount / ROTOR_SIZE;
+        *amount = *amount%ROTOR_SIZE;
+        div as usize
+    }
+
     fn part2<R: BufRead>(reader: R) -> Result<usize> {
-        let mut position:i32 = 50;
+        let mut position:i32 = INITIAL_POSITION;
         let mut count:usize = 0;
+        //read through each line in the input
         for line in reader.lines() {
             let line = line?;
+            //check if the rotation is to the left
             if(line.starts_with("L")){
                 let mut amount:i32 = line.split("L").nth(1).unwrap().parse()?;
-                if amount > 100{
-                    count += (amount/100) as usize;
-                    amount = amount %100;
+                if amount > ROTOR_SIZE {
+                    count += div_amount(&mut amount);
                 }
                 if amount > position && position != 0{
                     count += 1;
                 }
-                position = (position - amount)%100;
+                position = (position - amount)%ROTOR_SIZE;
                 while position<0{
-                    position = position + 100;
+                    position = position + ROTOR_SIZE;
                 }
             }
+            //check if the rotation is to the right
             else if line.starts_with("R") {
                 let mut amount:i32 = line.split("R").nth(1).unwrap().parse()?;
-                if amount>100{
-                    count += (amount/100)as usize;
-                    amount = amount %100;
+                if amount>ROTOR_SIZE{
+                    count += div_amount(&mut amount);
                 }
-                if amount + position > 100 && position != 0{
+                if amount + position > ROTOR_SIZE && position != 0{
                     count+=1;
                 }
-                position = (position+amount)%100;
+                position = (position+amount)%ROTOR_SIZE;
             }
-            if(position==0)
+            //determine if the rotor is in the 0 position
+            if(position==ROTOR_CLICK_POSITION)
             {
                 count += 1;
             }
