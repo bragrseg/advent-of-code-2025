@@ -26,12 +26,15 @@ fn main() -> Result<()> {
     fn part1<R: BufRead>(reader: R) -> Result<usize> {
         let lines = reader.lines();
         let mut answer: usize = 0;
+        //process through each line of input
         for line in lines {
             let line = line?;
             let letters = line.chars().collect::<Vec<_>>();
+            //determine the first position of the highest valid start number
             let startvalue = letters[0..letters.len() - 1].iter().max().unwrap();
             let startposition = letters.iter().position(|l| *l == *startvalue).unwrap();
             let endvalue = letters[startposition + 1..].iter().max().unwrap();
+            //add highest valid number to overall value
             answer = answer
                 + format!("{}{}", startvalue, endvalue)
                     .parse::<i32>()
@@ -50,39 +53,46 @@ fn main() -> Result<()> {
     //region Part 2
     println!("\n=== Part 2 ===");
 
-    fn getCombos(chars: Vec<char>, length: usize) -> String {
-        let mut combos: Vec<String> = Vec::new();
+    //find the highest possible value fromm the given characters for the length provided
+    fn get_highest(chars: Vec<char>, length: usize) -> String {
+        //deal with instance where just want the highest available character
         if length == 1 {
             let highest: String = chars
                 .iter()
                 .map(|c| c.to_string())
-                .unique()
-                .sorted()
+                .unique() //remove duplicates
+                .sorted() //sort and reverse to find highest
                 .rev()
-                .take(1)
+                .take(1) //take the first in the iter and assign to highest
                 .collect();
 
             return highest;
         }
+        //determine the value and position of the highest valid number for the start of the return string based on the length provided
         let startvalue = chars[0..(chars.len() - (length - 1))].iter().max().unwrap();
         let startposition = chars.iter().position(|l| *l == *startvalue).unwrap();
-        let option = getCombos(chars[startposition + 1..].to_vec(), length - 1);
-        let highest = format!("{}{}", chars[startposition], option);
-        return highest;
+        //use recursion to get the part of the string after the highest valid
+        let option = get_highest(chars[startposition + 1..].to_vec(), length - 1);
+        let highest = format!("{}{}", chars[startposition], option); //merge the highest valid with the string provided for the rest
+        highest
     }
 
     fn part2<R: BufRead>(reader: R) -> Result<usize> {
         let lines = reader.lines();
         let mut answer: usize = 0;
+        //process through each line of input
         for line in lines {
             let line = line?;
             let letters = line.chars().collect::<Vec<_>>();
+            //determine the first position of the highest valid start number
             let startvalue = letters[0..letters.len() - 11].iter().max().unwrap();
             let startposition = letters.iter().position(|l| *l == *startvalue).unwrap();
 
-            let combo = getCombos(letters.get(startposition..).unwrap().to_vec(), 12);
+            //determine the rest of the string for highest value
+            let combo = get_highest(letters.get(startposition..).unwrap().to_vec(), 12);
             let number = combo.parse::<i64>()?;
 
+            //add highest valid value to overall value
             answer = answer + number as usize;
         }
         Ok(answer)
